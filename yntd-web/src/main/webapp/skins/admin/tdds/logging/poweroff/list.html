@@ -1,0 +1,145 @@
+<#assign modulePath="${adminPath}/logging"/>
+<@layout.override name="body">
+<input type="hidden" id="uuid" value="${(filters.uuid)!}" />
+<input type="hidden" id="type" value="${type}" />
+<div ng-app="myApp" ng-controller="myCtrl" />
+<!-- <div class="row">
+<div class="col-xs-12">
+  <div class="box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">所有设备每日运行状态折线图（单位：分钟）</h3>
+	      <div class="box-tools pull-right">
+	        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+	        </button>
+	        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+	      </div>
+    </div>
+	<div class="box-body">
+		<div echarts-type="line" style="height:100%;">
+		</div>
+	</div>
+  </div>
+  </div>
+</div> -->
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box box-success">
+			<div class="box-header">
+			  <h3 class="box-title">设备停机状态日志</h3>
+			</div>
+			<div class="box-body">
+				<div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+				<div class="row">
+					<div class="col-sm-6" style="margin-bottom:3px">
+						<div class="box-tools">
+							<div class="input-group input-group-sm" style="width:420px;">
+							  <input type="text" name="table_search" 
+							  class="form-control pull-right" ng-model="value" placeholder="输入设备名称">
+							  <div class="input-group-btn">
+							    <button type="button" class="btn btn-default" ng-click="search()"> 
+							    	<i class="fa fa-search"></i>
+							    </button>
+							    <button type="button" class="btn btn-warning btn-sm search_adv_btn">
+						       	 	高级搜索
+						       </button>
+							  </div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6" style="text-align:right;margin-bottom:3px">
+						 <a class="btn btn-success btn-sm" ng-click="exportData()">
+							日志导出
+						</a>
+					</div>
+					<div class="row search_adv_box" style="left:25px;top:80px">
+						<div class="search_adv_row">
+							<div class="search_adv_label">时间</div>
+							<div class="search_adv_items">
+								<a href="javascript:;" ng-click="removeFilter('recordTime')" class="${fn.search_adv_item_cur(filters, 'recordTime')}">不限</a>
+								<@sys.optionList groupId='43'; items>
+									<a href="javascript:;" ng-click="updateFilter('recordTime', ${(items.value)!})" class="${fn.search_adv_item_cur(filters, 'recordTime', '${(items.value)!}')}">${(items.name)!}</a>
+								</@sys.optionList>
+								<a href="javascript:;" ng-click="chosenTime()">自定义时间</a>
+							</div>
+						</div>
+						<div class="search_adv_row">
+							<div class="search_adv_label">持续时间</div>
+							<div class="search_adv_items">
+								<a href="javascript:;" ng-click="removeFilter('timediff')" class="${fn.search_adv_item_cur(filters, 'timediff')}">不限</a>
+								<@sys.optionList groupId='44'; items>
+									<a href="javascript:;" ng-click="updateFilter('timediff', ${(items.value)!})" class="${fn.search_adv_item_cur(filters, 'timediff', '${(items.value)!}')}">${(items.name)!}</a>
+								</@sys.optionList>
+									<input type="number" ng-model="timediff" class="form-control" style="width:80px;height:25px" ng-blur="searchByTimeDiff()"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<table id="example2" class="table table-bordered table-hover">
+				           <thead>
+				            <tr role="row">
+				            	<th class="sorting" rowspan="1" colspan="1">设备名称</th>
+				            	<th class="sorting" rowspan="1" colspan="1">记录开始时间</th>
+				            	<th class="sorting" rowspan="1" colspan="1">记录结束时间</th>
+				            	<th class="sorting" rowspan="1" colspan="1">持续时间(分钟)</th>
+				           	</tr>
+				           </thead>
+							<tbody>
+								<tr ng-repeat="item in items">
+								  <td>{{item.machineName}}</td>
+								  <td>{{item.startTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+								  <td>{{item.endTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+								  <td>{{item.timediff}}</td>
+								</tr>
+							</tbody>
+						</table>
+			        </div>
+			    </div>
+				 <div class="row"> 
+				 	<div class="col-sm-3" style="float:left;text-align:left;">
+		 				<h5>总计：<span class="label label-success">{{sumTimeDiff}}分钟</span>
+		 				</h5>
+					</div>
+				 	<div class="col-sm-7" style="float:right;text-align: right;">
+		 				<div class="pull-right tcdPageCode"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+<!--------时间选择--------->
+<div id="chosenTime" style="display:none">
+<div class="box box-primary" style="height:0px">
+		<div class="box-body">
+			<div class="form-group">
+			    <div class="input-group">
+						<div class="input-group-addon">
+							<label>开始时间:</label>
+						</div>
+			     		<input type="text" id="startTime" name="startTime" class="Wdate form-control" 
+			     		style="height:33px;border-color:#d2d6de;" 
+			onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'endTime\')}'})">
+			 <div class="input-group-addon">
+			  	 <label>结束时间:</label>
+			 </div>
+			<input type="text" id="endTime" name="endTime" class="Wdate form-control" 
+			style="height:33px;border-color:#d2d6de;"
+			onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'startTime\')}'})">
+			   </div>
+			</div>
+		</div>
+         <div class="box-footer clearfix" style="line-height:40px;text-align:right;">
+    	<a class="btn btn-success btn-xs" ng-click="createRecordTime()">确定</a>
+    </div>
+  </div>
+</div>
+</div>
+</@layout.override>
+<@layout.override name="js">
+<@layout.super/>
+<script src="/themes/admin/logging/logginglist.js"></script>
+</@layout.override>
+<@layout.extends name="../../../_layouts/bootstrap1.html"/>

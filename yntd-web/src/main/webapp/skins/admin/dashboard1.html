@@ -1,0 +1,193 @@
+<@layout.override name="body">
+    <section class="content-header">
+      <h1>
+        <small>Version 2.0</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>后台管理</a></li>
+        <li class="active">首页</li>
+      </ol>
+    </section>
+    <section class="content" ng-app="dashboradApp" ng-controller="myCon">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon" style="background-color:#00c0ef00">
+            	<img  src="/themes/website/images/alibaba/running.png"/>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">运行</span>
+              <span class="info-box-number">{{running}}台</span>
+            </div>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon" style="background-color:#00c0ef00">
+            	<img  src="/themes/website/images/alibaba/poweroff.png"/>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">停机</span>
+              <span class="info-box-number">{{poweroff}}台</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon" style="background-color:#00c0ef00">
+            	<img src="/themes/website/images/alibaba/alarm.png"/>
+           	</span>
+            <div class="info-box-content">
+              <span class="info-box-text">报警</span>
+             <span class="info-box-number">{{alarm}}台</span>
+            </div>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon" style="background-color:#00c0ef00">
+            	<img src="/themes/website/images/alibaba/waiting.png"/>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">等待</span>
+              <span class="info-box-number">{{waiting}}台</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+         <div class="col-md-6">
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">设备实时状态</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+          	<div class="box-body no-padding" style="height:300px;">
+				 <span id="NLX4000_m" class="circle circle-running headerBox" style="top:40%;left:3%;">
+				</span>
+				<span id="6150B_m" class="circle circle-running headerBox" style="top:40%;left:14%;">
+				</span>
+				<span id="K6150_m" class="circle circle-running headerBox" style="top:40%;left:25%;">
+				</span>
+				<span id="K6150B_m" class="circle circle-running headerBox" style="top:40%;left:36%;">
+				</span>
+			 	<span id="7236A_m" class="circle circle-running headerBox" style="top:40%;left:47%;">
+				</span> 
+				 <span id="H700M_m" class="circle circle-running headerBox" style="top:40%;left:58%;">
+				</span>
+				<span id="150NC1_m" class="circle circle-running headerBox" style="top:40%;left:69%;">
+				</span>
+				<span id="150NC2_m" class="circle circle-running headerBox" style="top:40%;left:80%;">
+				</span>
+				<span id="D9332_m" class="circle circle-running headerBox" style="top:40%;left:91%;">
+				</span>
+				
+				<span id="FTC40_m" class="circle circle-running headerBox" style="top:70%;left:8%;">
+				</span>
+				<span id="4501_m" class="circle circle-running headerBox" style="top:70%;left:19%;">
+				</span>
+				<span id="4502_m" class="circle circle-running headerBox" style="top:70%;left:30%;">
+				</span>
+				<span id="250Plus_m" class="circle circle-running headerBox" style="top:70%;left:41%;">
+				</span>
+				<span id="1100A_m" class="circle circle-running headerBox" style="top:70%;left:52%;">
+				</span>
+				<span id="610A1_m" class="circle circle-running headerBox" style="top:70%;left:63%;">
+				</span>
+				<span id="610A2_m" class="circle circle-running headerBox" style="top:70%;left:74%;">
+				</span>
+				<span id="32SA_m" class="circle circle-running headerBox" style="top:70%;left:85%;">
+				</span>
+				
+				<span id="5132_m" class="circle circle-running headerBox" style="top:15%;left:8%;">
+				</span>
+				<span id="5132A_m" class="circle circle-running headerBox" style="top:15%;left:19%;">
+				</span>
+				<span id="7236A1_m" class="circle circle-running headerBox" style="top:15%;left:30%;">
+				</span>
+				<span id="7236A2_m" class="circle circle-running headerBox" style="top:15%;left:41%;">
+				</span>
+				<span id="7236B_m" class="circle circle-running headerBox" style="top:15%;left:52%;">
+				</span>
+				<span id="7236A3_m" class="circle circle-running headerBox" style="top:15%;left:63%;">
+				</span>
+				<span id="NVG8CT_m" class="circle circle-running headerBox" style="top:15%;left:74%;">
+				</span>
+				<span id="S5132_m" class="circle circle-running headerBox" style="top:15%;left:85%;">
+				</span>
+          </div>
+        </div>
+      </div>
+        <div class="col-md-6">
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">每日每台设备状态柱状图</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+          	<div class="box-body" style="height:300px;" bar-Charts>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">所有设备每日运行状态时长折线图</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              <!--   <div class="btn-group">
+                  <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-wrench"></i>
+                	</button>
+                </div> -->
+                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                	<i class="fa fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12" style="height:360px;">
+                  <div style="height:100%;width:100%" line-Charts>
+                  		
+                  </div>
+                </div>
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</@layout.override>
+<@layout.override name="css">
+<@layout.super/>
+<link rel="stylesheet" href="/themes/admin/index/css/css/dashboard.css">
+</@layout.override>
+<@layout.override name="js">
+<@layout.super/>
+<script src="/themes/admin/echarts-options/lineOption.js"></script>
+<script src="/themes/admin/echarts-options/barOption.js"></script>
+<script src="/themes/admin/index/js/dashboard.js"></script>
+</@layout.override>
+<@layout.extends name="_layouts/bootstrap1.html"/>

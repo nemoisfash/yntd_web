@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.tdds.mapper.PowerOffRecordMapper">
+	<!-- 单表查询映射结果 -->
+	<resultMap id="BaseResultMap" type="org.tdds.entity.PowerOffRecord">
+	</resultMap>
+    <!-- 单表查询结果列 -->
+    <sql id="Base_Column_List">
+    </sql>
+         <select id="findPoweroffData" resultType="java.lang.Double">
+			SELECT
+				IFNULL(sum(timediff),0)
+			FROM znzz_poweroff_record
+			WHERE
+		 <choose>
+		 	<when test="map.date!=null and map.date!=''">
+		 		 DATE(start_time) =#{map.date} 
+		 	</when>
+		 	<otherwise>
+		 		DATE(start_time) =CURRENT_DATE
+		 	</otherwise>
+		 </choose>
+		 <if test="map.machineId!=null and map.machineId!=''">
+		  	AND machine_id =#{map.machineId}
+		 </if>
+    </select>
+     <select id="findAllRecordById" resultType="map">
+     		SELECT id as id, record_time as recordTime
+			FROM znzz_poweroff_record where machine_id=#{id};
+     </select>
+    <select id="exportData" resultType="map">
+			 SELECT 
+				machine_name as sbmc,
+				start_time as kssj,
+				end_time as jssj,
+				timediff as timediff
+			FROM znzz_poweroff_record
+			where  id &gt; 0
+			<if test="filter.startTime!=null and filter.startTime!='' and filter.endTime!=null and filter.endTime!=''">
+			    AND DATE(start_time) BETWEEN #{filter.startTime} AND #{filter.endTime}
+			</if>
+			<if test="filter.machineName!=null and filter.machineName!=''">
+				AND machine_name=#{filter.machineName}
+			</if>
+			<if test="filter.timediff!=null and filter.timediff!=0">
+				AND timediff BETWEEN 0 AND #{filter.timediff}
+			</if>
+      </select>
+      <select id="findAllRecordsByMachineId" resultType="map">
+	 	SELECT
+	 		'关机' as 'name',
+	 		'a6a5a5' as color,
+			 DATE_FORMAT(start_time,'%H:%i:%s')  as startTime,
+			 DATE_FORMAT(end_time,'%H:%i:%s') as end_time,
+			 IFNULL(TIMESTAMPDIFF(MINUTE,start_time,end_time),0)  as diff
+		FROM znzz_poweroff_record
+		WHERE machine_id=#{machineId}
+		AND
+		DATE(start_time) =CURRENT_DATE
+		AND
+		DATE(end_time)=CURRENT_DATE
+    </select>
+	<select id="findTimeDiffByFilters" resultType="java.lang.Double">
+		 	SELECT 
+				IFNULL(SUM(timediff),0)
+			FROM znzz_poweroff_record
+			where  id &gt; 0
+			<if test="filter.startTime!=null and filter.startTime!='' and filter.endTime!=null and filter.endTime!=''">
+			    AND DATE(start_time) BETWEEN #{filter.startTime} AND #{filter.endTime}
+			    AND DATE(end_time) BETWEEN #{filter.startTime} AND #{filter.endTime}
+			</if>
+			<if test="filter.machineName!=null and filter.machineName!=''">
+				AND machine_name=#{filter.machineName}
+			</if>
+			<if test="filter.timediff!=null and filter.timediff!=0">
+				AND timediff BETWEEN 0 AND #{filter.timediff}
+			</if>
+	</select>
+	<select id="findTimeArrays" resultType="map">
+		SELECT
+			DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s') AS sTime,
+    		DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s') AS eTime,
+			timediff AS td,
+			'#a6a5a5' AS color
+		FROM
+			znzz_poweroff_record 
+		WHERE
+			machine_id = #{machineId}
+		AND start_time &gt; DATE_SUB(NOW(), INTERVAL 60 MINUTE);	 
+	</select>
+</mapper>
