@@ -17,7 +17,10 @@ import org.tdds.service.RunningRecordService;
 import org.tdds.service.WaitingRecordService;
 import org.tdds.service.WarningRecordService;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.hxz.webapp.util.DateUtils;
+import cn.hxz.webapp.util.MqttDataUtils;
 import net.chenke.playweb.QueryFilters;
 import net.chenke.playweb.support.mybatis.Page;
 import net.chenke.playweb.support.mybatis.PageImpl;
@@ -136,9 +139,12 @@ public class MachineServiceImpl implements MachineService {
 				}
 				entity.setEndTime(date);
 		}
+		 
 		return machineDao.updateByPrimaryKeySelective(entity);
 	}
 
+	
+	
 	@Override
 	public Machine findMachineByName(String machineName) {
 		Machine entity = new Machine();
