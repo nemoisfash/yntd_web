@@ -10,7 +10,7 @@ $interval(function(){
 		$scope.switchStatus(res.data.resault);
 		$scope.ioFalses=res.data.machines; 
 	})
-},10000)
+},4000)
 
 $http({
 	method: 'GET',

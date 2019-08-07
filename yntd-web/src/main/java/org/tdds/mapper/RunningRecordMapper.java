@@ -1,6 +1,7 @@
 package org.tdds.mapper;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,9 @@ public interface RunningRecordMapper extends DynaMapper<RunningRecord> {
 	Double findTimeDiffByFilters(@Param(value="filter")Map<String, Object> filter);
 
 	List<Map<String, Object>> findTimeArrays(@Param(value="machineId") Long machineId);
+
+	void deleteRepeat(@Param(value="machineId") Long machineId,@Param(value="startTime") Date startTime);
+
+	int selectRepeatCount(@Param(value="machineId") Long machineId,@Param(value="startTime") Date startTime);
 
 }

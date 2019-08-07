@@ -138,6 +138,10 @@ public class DateUtils {
 	    	num = diff/ nh;
 	    }else if(type.equalsIgnoreCase("min")){
 	    	num = diff/ nm;
+	    }else if(type.equalsIgnoreCase("sec")) {
+	    	num = diff/ 1000;
+	    }else if(type.equalsIgnoreCase("ms")) {
+	    	num=diff;
 	    }
 	    return Math.abs(num);
 	}

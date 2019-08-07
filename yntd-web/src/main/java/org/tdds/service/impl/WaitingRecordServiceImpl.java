@@ -179,4 +179,14 @@ public class WaitingRecordServiceImpl implements WaitingRecordService{
 		// TODO Auto-generated method stub
 		return daoWaitingRecord.findTimeArrays(machineId);
 	}
+	@Override
+	public int selectRepeat(Long id, Date startTime) {
+		// TODO Auto-generated method stub
+		return daoWaitingRecord.selectRepeat(id,startTime);
+	}
+	@Override
+	public void deleteRepeat(Long id, Date startTime) {
+		// TODO Auto-generated method stub
+		daoWaitingRecord.deleteRepeat(id,startTime);
+	}
 }

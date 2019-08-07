@@ -199,4 +199,14 @@ public class RunningRecordServiceImpl implements RunningRecordService {
 		 
 		return runningRecordDao.findTimeArrays(machineId);
 	}
+
+	@Override
+	public int selectRepeat(Long machineId, Date date) {
+		return runningRecordDao.selectRepeatCount(machineId,date);
+	}
+
+	@Override
+	public void deleteRepeat(Long id, Date startTime) {
+		runningRecordDao.deleteRepeat(id,startTime);
+	}
 }

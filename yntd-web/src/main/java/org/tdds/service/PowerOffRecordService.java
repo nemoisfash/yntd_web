@@ -1,5 +1,6 @@
 package org.tdds.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,8 @@ public interface PowerOffRecordService {
 	Double findTimeDiffByFilters(QueryFilters filters);
 
 	List<Map<String, Object>> findTimeArrays(Long machineId);
+
+	int selectRepeat(Long id, Date startTime);
+
+	void deleteRepeat(Long id, Date startTime);
 }

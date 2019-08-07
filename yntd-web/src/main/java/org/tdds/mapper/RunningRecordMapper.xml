@@ -111,4 +111,22 @@
 			machine_id = #{machineId}
 		AND start_time &gt; DATE_SUB(NOW(), INTERVAL 60 MINUTE);
     </select>
+    <delete id="deleteRepeat">
+		DELETE FROM 
+		 	znzz_running_record 
+	 	WHERE 
+	 		machine_id=#{machineId}
+	 	AND  
+	 		DATE_FORMAT(start_time,'%Y-%m-%d %H:%i')=DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i');
+    </delete>
+    <select id="selectRepeatCount" resultType="java.lang.Integer">
+		SELECT 
+			count(id)
+		FROM 
+		 	znzz_running_record
+	 	WHERE 
+	 		machine_id=#{machineId}
+	 	AND  
+	 		DATE_FORMAT(start_time,'%Y-%m-%d %H:%i')=DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i');
+    </select>
 </mapper>

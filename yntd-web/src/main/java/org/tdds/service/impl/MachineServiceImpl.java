@@ -102,7 +102,6 @@ public class MachineServiceImpl implements MachineService {
 
 	@Override
 	public int update(MonitoringList monitoringList,Machine entity) {
-		Date date = new Date();
 		String status=entity.getStatus();
 		String mstatus= monitoringList.getMachineSignal();
 		if(!status.equals(mstatus)){
@@ -118,26 +117,48 @@ public class MachineServiceImpl implements MachineService {
 				 bizWaitingRecord.insert(monitoringList, entity);
 			 }
 				entity.setStatus(mstatus);
-				entity.setStartTime(date);
-				entity.setEndTime(date);
+				entity.setStartTime(entity.getEndTime());
+				entity.setEndTime(new Date());
 		}else{
 				long timediff=DateUtils.getDatePoor(entity.getStartTime(),entity.getEndTime(),"min");
-				if(Math.abs(timediff)>10){
+				if(timediff>3){
+						try {
+							Thread.currentThread();
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					if(status.equals(STATUS[0])){
-						 bizRunningRecord.insert(monitoringList, entity);
+						if(bizRunningRecord.selectRepeat(entity.getId(),entity.getStartTime())>0) {
+							bizRunningRecord.deleteRepeat(entity.getId(),entity.getStartTime());
+						} 
+							bizRunningRecord.insert(monitoringList, entity);
 					 }else if(status.equals(STATUS[1])){
+						 if(bizPowerOff.selectRepeat(entity.getId(),entity.getStartTime())>0) {
+							 bizPowerOff.deleteRepeat(entity.getId(),entity.getStartTime());
+						 } 
 						 bizPowerOff.insert(monitoringList, entity);
 					 }else if(status.equals(STATUS[2])){
+						 if(bizWarningRecord.selectRepeat(entity.getId(),entity.getStartTime())>0) {
+							 bizWarningRecord.deleteRepeat(entity.getId(),entity.getStartTime());
+						 }
 						 bizWarningRecord.insert(monitoringList, entity);
 					 }else if(status.equals(STATUS[3])){
+						 if(bizWaitingRecord.selectRepeat(entity.getId(),entity.getStartTime())>0) {
+							 bizWaitingRecord.deleteRepeat(entity.getId(),entity.getStartTime());
+						 }
 						 bizWaitingRecord.insert(monitoringList, entity);
 					 }else {
+						 if(bizWaitingRecord.selectRepeat(entity.getId(),entity.getStartTime())>0) {
+							 bizWaitingRecord.deleteRepeat(entity.getId(),entity.getStartTime());
+						 }
 						 bizWaitingRecord.insert(monitoringList, entity);
 					 }
-					entity.setStartTime(date);
-					entity.setEndTime(date);
+						entity.setStartTime(entity.getEndTime());
+						entity.setEndTime(new Date());
+				}else {
+					entity.setEndTime(new Date());
 				}
-				entity.setEndTime(date);
 		}
 		 
 		return machineDao.updateByPrimaryKeySelective(entity);

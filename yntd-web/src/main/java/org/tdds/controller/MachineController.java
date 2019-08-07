@@ -66,7 +66,7 @@ public class MachineController extends BasePortalController {
  
 	List<Map<String, Object>> statuslist = new ArrayList<>();
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "static-access" })
 	@RequestMapping(value = "datalist", method = RequestMethod.GET)
 	public Object loging(HttpServletRequest request, HttpServletResponse res) {
 		Boolean success = true;
@@ -87,7 +87,13 @@ public class MachineController extends BasePortalController {
 				entity.put("overrideSpindle",monitor.getOverrideSpindle());
 				list.add(entity);
 			}
-				bizMachine.update(monitor,machine);
+				try {
+					Thread.currentThread().sleep(2000);
+					bizMachine.update(monitor,machine);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				 
 				monitor.setMachineName(machine.getCode());
 				entities.add(monitor);
 		}

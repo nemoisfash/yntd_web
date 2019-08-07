@@ -197,4 +197,16 @@ public class WarningRecordServiceImpl implements WarningRecordService{
 		 
 		return daoWarningRecord.findTimeArrays(machineId);
 	}
+
+	@Override
+	public int selectRepeat(Long id, Date startTime) {
+		 
+		return daoWarningRecord.selectRepeat(id,startTime);
+	}
+
+	@Override
+	public void deleteRepeat(Long id, Date startTime) {
+		// TODO Auto-generated method stub
+		daoWarningRecord.deleteRepeat(id,startTime);
+	}
 }

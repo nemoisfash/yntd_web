@@ -1,5 +1,6 @@
 package org.tdds.mapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,4 +24,8 @@ public interface PowerOffRecordMapper extends DynaMapper<PowerOffRecord> {
 	Double findTimeDiffByFilters(@Param(value = "filter") Map<String, Object> filter);
 
 	List<Map<String, Object>> findTimeArrays(@Param(value = "machineId")Long machineId);
+
+	int selectRepeatCount(@Param(value = "machineId")Long machineId,@Param(value = "startTime")Date startTime);
+
+	void deleteRepeat(@Param(value = "machineId")Long machineId,@Param(value = "startTime")Date startTime);
 }

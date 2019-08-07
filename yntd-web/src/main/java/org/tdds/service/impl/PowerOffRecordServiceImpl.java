@@ -182,4 +182,15 @@ public class PowerOffRecordServiceImpl implements PowerOffRecordService{
 		 
 		return daoPoweroff.findTimeArrays(machineId);
 	}
+
+	@Override
+	public int selectRepeat(Long id, Date startTime) {
+		 
+		return daoPoweroff.selectRepeatCount(id,startTime);
+	}
+
+	@Override
+	public void deleteRepeat(Long id, Date startTime) {
+		daoPoweroff.deleteRepeat(id,startTime);
+	}
 }
