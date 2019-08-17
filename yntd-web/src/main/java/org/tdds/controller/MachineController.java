@@ -54,48 +54,39 @@ public class MachineController extends BasePortalController {
 
 	@Autowired
 	private RunningRecordService bizRunningRecord;
- 
+
 	@Autowired
 	private LogRecordService bizLogRecord;
 
 	@Autowired
 	private ReportService bizLogReport;
 
-	// 西部大森manual=running
-	private static final String[] STATUS = { "RUNNING", "POWEROFF", "ALARM", "WAITING", "MANUAL" };
- 
+	private static final String[] STATUS = { "RUNNING", "POWEROFF", "ALARM",
+			"WAITING", "MANUAL" };
+
 	List<Map<String, Object>> statuslist = new ArrayList<>();
 
-	@SuppressWarnings({ "unused", "static-access" })
 	@RequestMapping(value = "datalist", method = RequestMethod.GET)
 	public Object loging(HttpServletRequest request, HttpServletResponse res) {
-		Boolean success = true;
 		List<Machine> machines = bizMachine.findMachine();
 		List<MonitoringList> entities = new ArrayList<>();
-		List<Map<String ,Object>> list = new ArrayList<>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		MonitoringList monitor = null;
 		for (Machine machine : machines) {
-			MonitoringList monitor=null;
-			if(machine.getIo()){
-				monitor=new MonitoringList();
+			if (machine.getIo()) {
+				monitor = new MonitoringList();
 				monitor.setMachineName(machine.getName());
 				monitor.setMachineSignal(getStatus(machine.getmIp()));
-			}else{
-				monitor=bizMonitoring.findByName(machine.getName());
-				Map<String,Object> entity = new HashMap<>();
+			} else {
+				monitor = bizMonitoring.findByName(machine.getName());
+				Map<String, Object> entity = new HashMap<>();
 				entity.put("machineName", machine.getName());
-				entity.put("overrideRapid",monitor.getOverrideRapid());
-				entity.put("overrideSpindle",monitor.getOverrideSpindle());
+				entity.put("overrideRapid", monitor.getOverrideRapid());
+				entity.put("overrideSpindle", monitor.getOverrideSpindle());
 				list.add(entity);
 			}
-				try {
-					Thread.currentThread().sleep(2000);
-					bizMachine.update(monitor,machine);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				 
-				monitor.setMachineName(machine.getCode());
-				entities.add(monitor);
+			monitor.setMachineName(machine.getCode());
+			entities.add(monitor);
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("resault", entities);
@@ -113,6 +104,39 @@ public class MachineController extends BasePortalController {
 	}
 	
 	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/insertLogging", method = RequestMethod.GET)
+	public Object insertLogging() {
+		List<Machine> machines = bizMachine.findMachine();
+		MonitoringList monitor = null;
+		int i = 0;
+		Boolean success = true;
+		for (Machine machine : machines) {
+			if (machine.getIo()) {
+				monitor = new MonitoringList();
+				monitor.setMachineName(machine.getName());
+				monitor.setMachineSignal(getStatus(machine.getmIp()));
+			} else {
+				monitor = bizMonitoring.findByName(machine.getName());
+			}
+			i += bizMachine.update(monitor, machine);
+
+		}
+		if (i == machines.size()) {
+			success = true;
+		} else {
+			success = false;
+		}
+		Map<String,Object> map = new HashMap<>();
+		map.put("success",success);
+		return map;
+	}
+
+	/**
 	 * 每天每小时设备运行状况 一天24*60分钟
 	 * 
 	 * @param request
@@ -126,19 +150,18 @@ public class MachineController extends BasePortalController {
 		List<String> times = new ArrayList<>();
 		List<Map<String, Object>> maps = new ArrayList<>();
 		List<Machine> machines = bizMachine.findMachine();
-		for(Machine entity:machines) {
-			if(!entity.getIo()) {
-				
+		for (Machine entity : machines) {
+			if (!entity.getIo()) {
+
 			}
 		}
-		map.put("xAxis",DateUtils.DateToString(new Date(),"yyyy-MM-dd HH:mm:ss"));
+		map.put("xAxis",
+				DateUtils.DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		map.put("series", maps);
-		
+
 		return map;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -155,7 +178,8 @@ public class MachineController extends BasePortalController {
 			for (String status : STATUS) {
 				if (!status.equalsIgnoreCase(STATUS[4])) {
 					Map<String, Object> entity = new HashMap<>();
-					Double num = bizLogRecord.findData(null, status, machine.getId());
+					Double num = bizLogRecord.findData(null, status,
+							machine.getId());
 					entity.put("value", num);
 					entity.put("name", StatusEnum.getValue(status));
 					entities.add(new JSONObject(entity));
@@ -190,10 +214,12 @@ public class MachineController extends BasePortalController {
 	}
 
 	private List<Map.Entry<String, Double>> sortMap(Map<String, Double> map) {
-		List<Map.Entry<String, Double>> list = new ArrayList<Map.Entry<String, Double>>(map.entrySet());
+		List<Map.Entry<String, Double>> list = new ArrayList<Map.Entry<String, Double>>(
+				map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
 			@Override
-			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+			public int compare(Entry<String, Double> o1,
+					Entry<String, Double> o2) {
 				return -o1.getValue().compareTo(o2.getValue());
 			}
 		});
@@ -202,32 +228,38 @@ public class MachineController extends BasePortalController {
 
 	@RequestMapping(value = "/timeLine/categories", method = RequestMethod.GET)
 	@ResponseBody
-	public Object categories(HttpServletRequest request, HttpServletResponse response) {
+	public Object categories(HttpServletRequest request,
+			HttpServletResponse response) {
 		List<Machine> machines = bizMachine.findMachine();
 		List<String> names = new ArrayList<>();
-		for(Machine entity: machines){
+		for (Machine entity : machines) {
 			names.add(entity.getName());
 		}
-		 return names;
+		return names;
 	}
- 
+
 	@RequestMapping(value = "/reportList", method = RequestMethod.GET)
 	@ResponseBody
-	public Object reportList(HttpServletRequest request, HttpServletResponse response) {
+	public Object reportList(HttpServletRequest request,
+			HttpServletResponse response) {
 		List<Report> reportsList = bizLogReport.findAll();
 		List<Map<String, Object>> entities = new ArrayList<>();
 		for (Report report : reportsList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("machineName", report.getMachineName());
-			map.put("plannedOtime", report.getPlannedOtime()+"H");
-			map.put("actualOtime", report.getActualOtime()+"H");
-			map.put("timeOee", createOee(report.getPlannedOtime(), report.getActualOtime()));
+			map.put("plannedOtime", report.getPlannedOtime() + "H");
+			map.put("actualOtime", report.getActualOtime() + "H");
+			map.put("timeOee",
+					createOee(report.getPlannedOtime(), report.getActualOtime()));
 			map.put("plannedCapacity", report.getPlannedCapacity());
 			map.put("actualCapacity", report.getActualCapacity());
-			map.put("performanceOee", createOee(report.getPlannedCapacity(), report.getActualCapacity()));
+			map.put("performanceOee",
+					createOee(report.getPlannedCapacity(),
+							report.getActualCapacity()));
 			map.put("number", report.getNumber());
 			map.put("goodNumber", report.getGoodNumber());
-			map.put("goodYield",createOee(report.getNumber(),report.getGoodNumber()));
+			map.put("goodYield",
+					createOee(report.getNumber(), report.getGoodNumber()));
 			entities.add(map);
 		}
 		return entities;
@@ -235,17 +267,18 @@ public class MachineController extends BasePortalController {
 
 	private String createOee(int dividend, int divisor) {
 		String f = null;
-		if(dividend!=0) {
-			if(dividend==divisor) {
-				f="100";
-			}else {
-				Double numDouble =(Double.valueOf(divisor) / Double.valueOf(dividend))*100;
-	 			f= new DecimalFormat("#.00").format(numDouble);
+		if (dividend != 0) {
+			if (dividend == divisor) {
+				f = "100";
+			} else {
+				Double numDouble = (Double.valueOf(divisor) / Double
+						.valueOf(dividend)) * 100;
+				f = new DecimalFormat("#.00").format(numDouble);
 			}
-		}else {
-			f="0";
+		} else {
+			f = "0";
 		}
-		return  f + "%";
+		return f + "%";
 	}
 
 	/**
@@ -257,22 +290,24 @@ public class MachineController extends BasePortalController {
 	 */
 	@RequestMapping(value = "/timeLine/seriesData", method = RequestMethod.GET)
 	@ResponseBody
-	public Object timer(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+	public Object timer(HttpServletRequest request, HttpServletResponse response)
+			throws ParseException {
 		List<Machine> machines = bizMachine.findMachine();
 		int i = 0;
 		List<Map<String, Object>> list = new LinkedList<Map<String, Object>>();
 		for (Machine machine : machines) {
-			Map<String,Object> map = new HashMap<String, Object>();
-			map.put("code" ,i);
-			List<Map<String,Object>> times = new ArrayList<>();
-			for(String status:STATUS){
-				List<Map<String,Object>> time=bizLogRecord.findTimeArrays(status,machine.getId());
-				if(!time.isEmpty()){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("code", i);
+			List<Map<String, Object>> times = new ArrayList<>();
+			for (String status : STATUS) {
+				List<Map<String, Object>> time = bizLogRecord.findTimeArrays(
+						status, machine.getId());
+				if (!time.isEmpty()) {
 					times.addAll(time);
 				}
 			}
-			
-			if(!times.isEmpty()){
+
+			if (!times.isEmpty()) {
 				map.put("values", times);
 			}
 			list.add(map);
@@ -280,14 +315,18 @@ public class MachineController extends BasePortalController {
 		}
 		return list;
 	}
-	
 
 	/**
-	 * @param running:运行
-	 * @param waitting:等待
-	 * @param warning:报警  status=1:停机 status=0:运行
-	 * @param ip:设备ip
-	 * @param port:端口号
+	 * @param running
+	 *            :运行
+	 * @param waitting
+	 *            :等待
+	 * @param warning
+	 *            :报警 status=1:停机 status=0:运行
+	 * @param ip
+	 *            :设备ip
+	 * @param port
+	 *            :端口号
 	 * @return io 设备采集数据状态
 	 */
 	private String getStatus(String ip) {
@@ -295,26 +334,27 @@ public class MachineController extends BasePortalController {
 		Boolean running = null;
 		Boolean waitting = null;
 		Boolean warning = null;
+		/* ip="192.168.0.140"; */
 		try {
 			running = Modbus4jUtil.readInputStatus(ip, 502, 1, 0);
 			waitting = Modbus4jUtil.readInputStatus(ip, 502, 1, 1);
 			warning = Modbus4jUtil.readInputStatus(ip, 502, 1, 2);
 		} catch (ModbusTransportException | ErrorResponseException
 				| ModbusInitException e) {
-			status=STATUS[1];
+			status = STATUS[1];
 		}
-		
-		if(running!=null && running){
-			if(waitting){
-				status=STATUS[0];
-			}else{
-				status=STATUS[3];
+
+		if (running != null && running) {
+			if (waitting) {
+				status = STATUS[0];
+			} else {
+				status = STATUS[3];
 			}
-			if(warning){
-				status=STATUS[2];
+			if (warning) {
+				status = STATUS[2];
 			}
-		}else{
-			status=STATUS[1];
+		} else {
+			status = STATUS[1];
 		}
 		return status;
 	}

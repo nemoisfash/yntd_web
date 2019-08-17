@@ -1,5 +1,5 @@
 var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope,$http,$interval) {
+app.controller('myCtrl', function($scope,$http,$interval,$timeout) {
 $interval(function(){
 	$http({
 		method: 'GET',
@@ -10,7 +10,8 @@ $interval(function(){
 		$scope.switchStatus(res.data.resault);
 		$scope.ioFalses=res.data.machines; 
 	})
-},4000)
+},10000*2)
+
 
 $http({
 	method: 'GET',
@@ -18,7 +19,25 @@ $http({
 	cache:false,
 	async:false}).then(function(res){
 	$scope.reports=res.data;
+	insertLogging();
 })
+
+function insertLogging(){
+	$http({
+		method:'GET',
+		url:'/member/insertLogging.json',
+		cache:false,
+		async:false
+	}).then(function(res){
+		if(res.data.success){
+			console.info(res.data.success);
+			$timeout(function(){
+				insertLogging()
+			},3000*10)
+		} 
+	})
+	
+}
 
 $scope.switchStatus=function(obj){
 	$.each(obj,function(){
@@ -38,8 +57,8 @@ $scope.switchStatus=function(obj){
 			$interval(function(){
 				var now = new Date();
 				var time = now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-				if(time==="0:0:0"){
-					localStorage.setItem('flash',"true");
+				if(now.getMinutes()==59){
+					localStorage.setItem('getData',"true");
 				}
 				var date = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+time+" "+"星期"+weekArray[now.getDay()];
 				elem.text(date);
@@ -245,11 +264,13 @@ $scope.switchStatus=function(obj){
 						 }
 					 }); 
 					 myChart.setOption(option);
+					 localStorage.setItem('getData','false');
 				})
+
 				
 				$timeout(function(){
 					setSeriesData();
-				},100000*6)
+				},6000*10*10)
 			}
 		}
 	}

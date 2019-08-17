@@ -93,16 +93,16 @@
 				znzz_waiting_record 
 			WHERE
 				machine_id = #{machineId}
-			AND start_time &gt; DATE_SUB(NOW(), INTERVAL 60 MINUTE);
+			AND
+			 DATE(start_time) = CURRENT_DATE
 		</select>
 		
 		<delete id="deleteRepeat">
 		DELETE FROM 
-		 	znzz_waiting_record 
-	 	WHERE 
-	 		machine_id=#{machineId}
-	 	AND  
-	 		DATE_FORMAT(start_time,'%Y-%m-%d %H:%i')=DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i');
+			znzz_waiting_record 
+		WHERE
+		ABS(TIMESTAMPDIFF(MINUTE,start_time,'#{startTime}')) &lt; 5
+		AND machine_id = #{machineId}
     </delete>
     <select id="selectRepeat" resultType="java.lang.Integer">
 		SELECT 
@@ -112,6 +112,6 @@
 	 	WHERE 
 	 		machine_id=#{machineId}
 	 	AND  
-	 		DATE_FORMAT(start_time,'%Y-%m-%d %H:%i')=DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i');
+	 		ABS(TIMESTAMPDIFF(MINUTE,start_time,'#{startTime}')) &lt; 5
     </select>
 </mapper>
