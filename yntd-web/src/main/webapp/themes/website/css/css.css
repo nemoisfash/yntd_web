@@ -97,7 +97,7 @@
       .list ul li:nth-child(4n) {
         margin-right: 0; }
       .list ul li.on {
-        background-image: url(../images/page_18.jpg);
+        background-image: url(/themes/website/images/subsidies5G/page_18.jpg);
         border: .02rem solid #FF6030; }
       .list ul li img {
         display: block;

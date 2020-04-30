@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
  
 import org.apache.commons.lang3.StringUtils;
- 
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,10 +27,12 @@ import org.tdds.entity.Activities;
 import org.tdds.entity.Recipients;
 import org.tdds.service.RecipientsService;
 
- 
-
+import cn.hxz.webapp.syscore.entity.User;
+import cn.hxz.webapp.syscore.support.AuthorizingUtils;
 import cn.hxz.webapp.syscore.support.BasePortalController;
 import cn.hxz.webapp.util.MobileOperatorUtils;
+import cn.hxz.webapp.util.ShiroUtils;
+import net.chenke.playweb.util.HashUtils;
  
 
 @Controller
@@ -50,6 +53,9 @@ public class Subsidies5GController extends BasePortalController{
 		entity.setRecomTel(remTel);
 		int num =  bizRecipients.save(entity);
 		Map<String, Object> map = new HashMap<String, Object>();
+		//String credentials = HashUtils.MD5(subsidiesTel, remTel);
+		//UsernamePasswordToken token = new UsernamePasswordToken(subsidiesTel, credentials, false, ShiroUtils.getHost());
+		//ShiroUtils.login(token);
 		 if(num==1) {
 			map.put("result",true);
 			map.put("message","登陆成功");
@@ -62,10 +68,13 @@ public class Subsidies5GController extends BasePortalController{
 	}
 	
 	
-	@RequestMapping(value = "/sendSMS", method = RequestMethod.GET)
 	@ResponseBody
-	public Object sendSms(ModelMap map,HttpServletRequest request,HttpServletResponse response,@RequestParam("tel") String tel) {
- 		if(StringUtils.isBlank(tel) || StringUtils.isEmpty(tel)) {
+	@RequestMapping(value = "/sendSMS", method = RequestMethod.GET)
+	public Object sendSms(HttpServletRequest request,HttpServletResponse response,@RequestParam("tel") String tel) {
+ 		Map<String, Object> map = new HashMap<String, Object>();
+ 		
+		
+		if(StringUtils.isBlank(tel) || StringUtils.isEmpty(tel)) {
 			map.put("message", "手机号码不能为空");
 			map.put("result",false);
 			return map;
@@ -75,7 +84,6 @@ public class Subsidies5GController extends BasePortalController{
 			map.put("result",false);
 			return map;
 		}
-		
 		//String code= RandomStringUtils.randomAlphanumeric(5);
 		String code = "nxdx";
 		try {
@@ -84,12 +92,14 @@ public class Subsidies5GController extends BasePortalController{
 			cookie.setMaxAge(60);
 			cookie.setPath("/");
 			response.addCookie(cookie);
+			map.put("message", "验证码已发送请注意查收！");
+			map.put("result",true);
+			map.put("data",code);
 		 } catch (Exception e) {
 			map.put("message", "发送验证码出错");
 			map.put("result",false);
 			return map;
 		}
-		 
 		return map;
 	 }
 		
@@ -112,9 +122,10 @@ public class Subsidies5GController extends BasePortalController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public Object update(ModelMap map,String currentSubsidiesTel,String activitiesId) {
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public Object update(String currentSubsidiesTel,String activitiesId) {
 		Recipients entity = bizRecipients.getOne(currentSubsidiesTel);
+		Map<String, Object> map = new HashMap<String, Object>();
 		if(StringUtils.isBlank(activitiesId) || StringUtils.isBlank(currentSubsidiesTel)) {
 			map.put("result", false);
 			return map;
@@ -133,6 +144,23 @@ public class Subsidies5GController extends BasePortalController{
 	@RequestMapping(value = "/success", method = RequestMethod.GET)
 	public String success() {
 		return this.view("/www/success");
+	}
+	
+	@RequestMapping(value = "/getSubsidies", method = RequestMethod.GET)
+	@ResponseBody
+	public Object getSubsidies(String tel) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(StringUtils.isEmpty(tel)||StringUtils.isBlank(tel)) {
+			map.put("result", false);
+			return map;
+		}
+		Recipients entity = bizRecipients.getOne(tel);
+		if(entity!=null) {
+			map.put("result", true);
+		}else {
+			map.put("result", false);
+		}
+		return map;
 	}
 	
 }

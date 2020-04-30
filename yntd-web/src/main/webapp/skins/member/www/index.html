@@ -11,29 +11,30 @@
 <script type="text/javascript" src="/assets/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/jquery/dist/jquery.cookie.js"></script>
 <script type="text/javascript" src="/themes/website/js/rem.js"></script>
+<script type="text/javascript" src="/assets/layui/layer.min.js"></script>
+
 </head>
 
 <body>
 	<div class="content">
 		<div class="form">
 			<div class="label">
-				<img src="/themes/website/images/subsidies5G/icon_18.jpg" /> <input
-					type="text" placeholder="请输入领取人手机号码" name="" id="subsidies_tel"
-					value="" />
+				<img src="/themes/website/images/subsidies5G/icon_18.jpg" /> 
+				<input type="text" placeholder="请输入领取人手机号码" name="tel" id="subsidies_tel" value="" onchange="getSubsidies(this.value)" />
 			</div>
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_182.jpg" /> 
-				<input type="text" placeholder="请输入验证码" name="" id="subsidies_code" value=""/>
-				<div data-flag='true' onclick="sedMessage('subsidies_tel');">获取验证码</div>
+				<input type="text" placeholder="请输入验证码" name="" id="subsidies_code" value="" onchange="verifyCode('subsidies')"/>
+				<div data-flag='true' onclick="sedMessage('subsidies_tel',this);">获取验证码</div>
 			</div>
 			<div class="label">
-				<img src="/themes/website/images/subsidies5G/icon_181.jpg" /> <input
-					type="text" placeholder="请输入推荐人手机号码" name="" id="rem_tel" value="" />
+				<img src="/themes/website/images/subsidies5G/icon_181.jpg" />
+				<input type="text" placeholder="请输入推荐人手机号码" name="tel" id="rem_tel" value="" />
 			</div>
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_182.jpg" /> 
-				<input type="text" placeholder="请输入验证码" name="" id="rem_code" value="" />
-				<div data-flag='true'>获取验证码</div>
+				<input type="text" placeholder="请输入验证码" name="" id="rem_code" value="" onchange="verifyCode('rem')"/>
+				<div data-flag='true' onclick="sedMessage('rem_tel',this);">获取验证码</div>
 			</div>
 			<div class="code">
 				<div></div>
@@ -48,9 +49,58 @@
 	</div>
 </body>
  
-<script>
-	$('.content.form .label div').click(function() {
-		var that = this;
+<script type="text/javascript">
+	 $('.code').click(function() {
+		var agreement =false;
+		if ($(this).hasClass('on')) {
+			$(this).removeClass('on')
+		} else {
+			$(this).addClass('on')
+			agreement=true;
+		}
+		sessionStorage.setItem("agreement", agreement);
+	})
+ 	
+	function sedMessage(key,obj) {
+		var tel = $("#" + key).val();
+		if (tel == "") {
+			layer.msg("请填写手机号码!");
+			return;
+		}
+ 
+		var length = tel.length;
+        var phone = /(^(\d{3,4}-)?\d{6,8}$)|(^(\d{3,4}-)?\d{6,8}(-\d{1,5})?$)|(\d{11})/;
+        if(!phone.test(tel) && length!=11){
+        	$("#" + key).val("");
+        	layer.msg("请填写正确的手机号码！");
+        	return;
+        };
+		
+		var code =$.cookie(tel);
+		if(typeof(code)!="undefined"){
+			layer.msg("联系人手机号码和推荐人手机号码不能相同!");
+			return;
+		}
+		 
+		$.ajax({
+			  type: 'GET',
+			  url:"/activities/sendSMS?tel=" + tel,
+			  dataType: "JSON",
+			  success: function(res){
+				  if (res.result) {
+					  	console.info(res.message);
+						layer.msg(res.message);
+						var data = res.data;
+						countdown(obj);
+					} else {
+						layer.msg(res.message);
+					}
+			  },
+		 });
+	}
+
+	function countdown(obj){
+		var that = obj;
 		var s = 60;
 		var times = setInterval(function() {
 			if (s == 0) {
@@ -62,36 +112,92 @@
 				$(that).html(s + 's')
 			}
 		}, 1000)
-
-	})
-	$('.code').click(function() {
-		if ($(this).hasClass('on')) {
-			$(this).removeClass('on')
-		} else {
-			$(this).addClass('on')
+ 	}
+	
+	function getSubsidies(val){
+		if(val==""){
+			return
 		}
-	})
-
-	function sedMessage(key) {
-		var tel = $("#" + key).val();
-		if (tel == "") {
-			alert("请填写手机号码");
-			return;
-		}
-
-		$.get("/activities/sendSMS?tel=" + tel, function(res) {
-			if (res.result) {
-				alter(res.message);
-				var data = res.data;
-			} else {
-				alter(res.message);
-			}
-		})
+        
+		$.ajax({
+			  type: 'GET',
+			  url: "/activities/getSubsidies?tel="+val,
+			  dataType: "JSON",
+			  success: function(data){
+				  if(data.result){
+					  layer.msg("只能参加一次活动");
+					  $("#subsidies_tel").val("");
+				  }
+			  },
+		 });
 	}
-
-	function submit() {
-		localStorage.setItem("currentSubsidiesTel",$("#subsidies_tel").val());
-		 $.ajax({
+	
+	function verifyCode(key) {
+		var tel=$("#"+key+"_tel").val();
+		var code=$("#"+key+"_code").val();
+		var currentCode = $.cookie(tel);
+		var currentUser; 
+		if(key=="subsidies"){
+			currentUser="领取人";
+		}else{
+			currentUser="推荐人";
+		}
+		if(tel==""){
+			layer.msg("请获取"+currentUser+"验证码");
+			return false;
+		}
+		if(currentCode==""||typeof(currentCode)=="undefined"){
+			layer.msg(currentUser+"验证码失效请重新获取!");
+			$("#"+key+"_code").val("");
+			return false;
+		}
+		
+		if(code==""){
+			layer.msg(currentUser+"验证码未填写!");
+			return false;
+		}
+		
+		if(code!=currentCode){
+			layer.msg(currentUser+"验证码输入错误!");
+			return false;
+		} 
+		return true;
+		
+  	}
+	
+ 	function submit() {
+		var subsidiesTel =$("#subsidies_tel").val();
+		var remTel =$("#rem_tel").val();
+		if(subsidiesTel==""){
+			layer.msg("领取人手机号码不能为空！");
+			return
+		}
+		if(remTel==""){
+			layer.msg("推荐人手机号码不能为空！");
+			return
+		}
+		
+		var subsidiesCookie =$.cookie(subsidiesTel);
+		var remCookie =$.cookie(remTel);
+		
+		if(typeof(subsidiesCookie)=="undefined"){
+			layer.msg("领取人验证码已经过期不能提交！请重新获取");
+			return
+		}
+		
+		if(typeof(remCookie)=="undefined"){
+			layer.msg("领取人验证码已经过期不能提交！请重新获取");
+			return
+		}
+		
+		var agreement = sessionStorage.getItem("agreement");
+	 	if(typeof(agreement)!="undefined" && agreement=="false"){
+	 		layer.msg("请阅读并同意 《隐私协议》《用户协议》");
+			return
+	 	}
+	 	
+	 	localStorage.setItem("currentSubsidiesTel",$("#subsidies_tel").val());
+		$.ajax({
 			  type: 'POST',
 			  url: "/activities/add",
 			  data: {"subsidiesTel":$("#subsidies_tel").val(),"remTel":$("#rem_tel").val()},
@@ -101,24 +207,8 @@
 					  window.location.href="/activities/page.html";
 				  }
 			  },
-			 
 		 });
-			
- 		}
-
-	function verifyCode(val) {
-		var key =val.split("-");
-		var tel=$("#"+key[0]+"tel").val();
-		var code=$("#"+key[0]+"code").val();
-		var currentCode = $.cookie(tel);
-		if(currentCode==""){
-			return false;
-		}
-		
-		if(currentCode==code){
-			return true;
-		}
-  	}
+ 	}
 </script>
 
 </html>

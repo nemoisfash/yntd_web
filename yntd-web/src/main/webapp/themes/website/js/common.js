@@ -1,24 +1,39 @@
-app.controller('myCtrl', function($scope,$http,$interval,$timeout) {
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope,$http) {
 	$http({
 		method: 'GET',
 		url:"/activities/allActivities.json",
 		cache:false,
 		async:false}).then(function(res){
-		var items = res.data.result;
-		
+		$scope.items = res.data.data;
+		console.info($scope.items);
 	 })
 	 
-	 $scope.submit=function(obj){
+	$scope.addClass=function(evn,id){
+		$(evn.target).addClass('on').siblings().removeClass('on');
+		localStorage.setItem("activitiesId",id);
+	}
+	 
+	$scope.submit=function(){
 		 var currentSubsidiesTel = localStorage.getItem("currentSubsidiesTel");
 		 var activitiesId = localStorage.getItem("activitiesId");
-		 $http({
-			method: 'POST',
-			url:"/activities/update.json",
-			cache:false,
-			async:false}).then(function(res){
-			var items = res.data.result;
-			window.location.href="/activities/success.html";
-			
-		 })
-	 }
+		 if(typeof(currentSubsidiesTel)=="undefined"){
+			 console.info("undefined");
+			 window.location.href="/index";
+			 return;
+		 }
+		 
+		$.ajax({
+		  type: 'POST',
+		  url: "/activities/update",
+		  data: {"currentSubsidiesTel":currentSubsidiesTel,"activitiesId":activitiesId},
+		  dataType: "JSON",
+		  success: function(data){
+			if(data.result){
+				  window.location.href="/activities/success.html";
+			  }
+			},
+		 });
+	}
+	
 })

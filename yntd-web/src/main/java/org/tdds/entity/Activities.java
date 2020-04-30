@@ -26,7 +26,7 @@ public class Activities {
 	private String name;
 	
 	@Column(name = "logo_url")
-	private String logo_url;
+	private String logoUrl;
 
 	public Long getId() {
 		return id;
@@ -44,12 +44,11 @@ public class Activities {
 		this.name = name;
 	}
 
-	public String getLogo_url() {
-		return logo_url;
+	public String getLogoUrl() {
+		return logoUrl;
 	}
 
-	public void setLogo_url(String logo_url) {
-		this.logo_url = logo_url;
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
 	}
-
 }
