@@ -135,11 +135,11 @@
 		    <artifactId>pagehelper</artifactId>
 			<version>${mybatis-pagehelper-ver}</version>
 		</dependency>
-		<dependency>
+	<!--	<dependency>
 		    <groupId>com.infiniteautomation</groupId>
 		    <artifactId>modbus4j</artifactId>
 			<version>3.0.3</version>
-		</dependency>
+		</dependency>-->
 		<!-- datasource -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -262,7 +262,12 @@
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-websocket</artifactId>
 		    <version>4.3.10</version>
-		</dependency> 
+		</dependency>
+		<dependency>
+		    <groupId>com.aliyun</groupId>
+		    <artifactId>aliyun-java-sdk-core</artifactId>
+		    <version>4.1.0</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

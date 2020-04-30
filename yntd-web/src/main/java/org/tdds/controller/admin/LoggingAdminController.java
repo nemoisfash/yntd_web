@@ -43,14 +43,12 @@ import org.tdds.service.WaitingRecordService;
 import org.tdds.service.WarningRecordService;
 
 import com.alibaba.fastjson.JSONObject;
-import com.serotonin.modbus4j.exception.ErrorResponseException;
-import com.serotonin.modbus4j.exception.ModbusInitException;
-import com.serotonin.modbus4j.exception.ModbusTransportException;
+
 
 import cn.hxz.webapp.syscore.support.BaseWorkbenchController;
 import cn.hxz.webapp.util.ExcelExportUtils;
 import cn.hxz.webapp.util.echarts.StatusEnum;
-import cn.hxz.webapp.util.modbus.Modbus4jUtil;
+
 import net.chenke.playweb.QueryFilters;
 import net.chenke.playweb.support.mybatis.Page;
 import net.chenke.playweb.support.mybatis.PageRequest;
@@ -194,8 +192,8 @@ public class LoggingAdminController extends BaseWorkbenchController {
 			montior.setMachineSignal(StatusEnum.getValue(montior.getMachineSignal()));
 		}else {
 			montior =new MonitoringList();
-			String status=getStatus(machine.getmIp());
-			montior.setMachineStatus(StatusEnum.getValue(status));
+			//String status=getStatus(machine.getmIp());
+			//montior.setMachineStatus(StatusEnum.getValue(status));
 		}
 		return montior;
 	}
@@ -306,7 +304,7 @@ public class LoggingAdminController extends BaseWorkbenchController {
 		}
 	}
 	
-	private String getStatus(String ip) {
+	/*private String getStatus(String ip) {
 		String status = STATUS[0];
 		Boolean running = true;
 		Boolean waitting = true;
@@ -332,6 +330,6 @@ public class LoggingAdminController extends BaseWorkbenchController {
 		}
 
 		return status;
-	}
+	}*/
 	
 }

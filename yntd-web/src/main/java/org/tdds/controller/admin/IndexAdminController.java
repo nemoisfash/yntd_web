@@ -23,12 +23,10 @@ import org.tdds.service.LogRecordService;
 import org.tdds.service.MachineService;
 import org.tdds.service.MonitoringService;
 
-import com.serotonin.modbus4j.exception.ErrorResponseException;
-import com.serotonin.modbus4j.exception.ModbusInitException;
-import com.serotonin.modbus4j.exception.ModbusTransportException;
+
 
 import cn.hxz.webapp.util.echarts.StatusEnum;
-import cn.hxz.webapp.util.modbus.Modbus4jUtil;
+
 import net.chenke.playweb.QueryFilters;
 import net.chenke.playweb.util.FiltersUtils;
 import net.chenke.playweb.util.HashUtils;
@@ -75,7 +73,7 @@ public class IndexAdminController {
 			MonitoringList monitoringlist=null;
 			if(entity.getIo()) {
 				monitoringlist=new MonitoringList();
-				monitoringlist.setMachineSignal(getStatus(entity.getmIp()));
+				//monitoringlist.setMachineSignal(getStatus(entity.getmIp()));
 			}else {
 				monitoringlist=bizMonitoring.findByName(entity.getName());
 			}
@@ -174,7 +172,7 @@ public class IndexAdminController {
 		return series;
 	}
 	
-	private String getStatus(String ip) {
+	/*private String getStatus(String ip) {
 		String status = STATUS[0];
 		Boolean running = null;
 		Boolean waitting = null;
@@ -201,6 +199,6 @@ public class IndexAdminController {
 			status=STATUS[1];
 		}
 		return status;
-	}
+	}*/
 	
 }

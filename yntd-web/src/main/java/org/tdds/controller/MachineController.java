@@ -31,14 +31,12 @@ import org.tdds.service.RunningRecordService;
 import org.tdds.service.WarningRecordService;
 
 import com.alibaba.fastjson.JSONObject;
-import com.serotonin.modbus4j.exception.ErrorResponseException;
-import com.serotonin.modbus4j.exception.ModbusInitException;
-import com.serotonin.modbus4j.exception.ModbusTransportException;
+
 
 import cn.hxz.webapp.syscore.support.BasePortalController;
 import cn.hxz.webapp.util.DateUtils;
 import cn.hxz.webapp.util.echarts.StatusEnum;
-import cn.hxz.webapp.util.modbus.Modbus4jUtil;
+
 
 @Controller
 @RequestMapping("/member")
@@ -76,7 +74,7 @@ public class MachineController extends BasePortalController {
 			if (machine.getIo()) {
 				monitor = new MonitoringList();
 				monitor.setMachineName(machine.getName());
-				monitor.setMachineSignal(getStatus(machine.getmIp()));
+				//monitor.setMachineSignal(getStatus(machine.getmIp()));
 			} else {
 				monitor = bizMonitoring.findByName(machine.getName());
 				Map<String, Object> entity = new HashMap<>();
@@ -119,7 +117,7 @@ public class MachineController extends BasePortalController {
 			if (machine.getIo()) {
 				monitor = new MonitoringList();
 				monitor.setMachineName(machine.getName());
-				monitor.setMachineSignal(getStatus(machine.getmIp()));
+				//monitor.setMachineSignal(getStatus(machine.getmIp()));
 			} else {
 				monitor = bizMonitoring.findByName(machine.getName());
 			}
@@ -316,7 +314,7 @@ public class MachineController extends BasePortalController {
 		return list;
 	}
 
-	/**
+/*	*//**
 	 * @param running
 	 *            :运行
 	 * @param waitting
@@ -328,13 +326,13 @@ public class MachineController extends BasePortalController {
 	 * @param port
 	 *            :端口号
 	 * @return io 设备采集数据状态
-	 */
+	 *//*
 	private String getStatus(String ip) {
 		String status = STATUS[0];
 		Boolean running = null;
 		Boolean waitting = null;
 		Boolean warning = null;
-		/* ip="192.168.0.140"; */
+		*//* ip="192.168.0.140"; *//*
 		try {
 			running = Modbus4jUtil.readInputStatus(ip, 502, 1, 0);
 			waitting = Modbus4jUtil.readInputStatus(ip, 502, 1, 1);
@@ -357,6 +355,6 @@ public class MachineController extends BasePortalController {
 			status = STATUS[1];
 		}
 		return status;
-	}
+	}*/
 
 }

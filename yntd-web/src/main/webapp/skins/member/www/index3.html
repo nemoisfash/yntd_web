@@ -93,8 +93,6 @@
 							</span>
 							<span id="NVG8CT_m" class="circle circle-running headerBox" style="top:7%;left:74%;">
 							</span>
-							<span id="S5132_m" class="circle circle-running headerBox" style="top:7%;left:85%;">
-							</span>
 						</div>
 						<div style="width:100%;height:2.25rem;text-align:center;line-height:2.25rem;">
 							<a class="btn btn-sx" style="background-color:#12b07b"></a>
@@ -149,41 +147,22 @@
 							<span style="color:#FFFFFF">等待<span>
 						</div>
 					</div>
-					<div class="nav-tabs-custom" style="background-color:#081639a1;height:26.625rem;margin-top:14px;">
+					<div class="nav-tabs-custom" style="background-color:#081639a1;height:26.625rem;margin-top:20px;">
 						<span class="label label-default">时间线</span>
-						<div style="width:100%;height:100%;overflow:hidden;" time-Line>
+						<div style="width:100%;height:100%;" time-Line>
 						</div>
 					</div>
 				</section>
 				<section class="col-lg-6 connectedSortable ui-sortable">
-					<div class="nav-tabs-custom" style="background-color:#081639a1;height:30.625rem;margin-top:8px;overflow:hidden;">
+					<div class="nav-tabs-custom" style="background-color:#081639a1;height:30.625rem;margin-top:8px;">
 						<span class="label label-default">设备运行排行</span>
-						  <div data-ranking='true' style="width:100%;height:100%;" ranking-Running>
-						 </div>
-					 </div>
-				<!-- 	<div class="nav-tabs-custom" style="background-color:#081639a1;height:17.5rem;margin-top:16px;overflow:hidden;">
-						<span class="label label-default">设备实时数据</span>
-						<div style="width:100%;height:100%;margin-top:15px;overflow:hidden;">
-				          <div class="roll-up box box-default col-md-3" ng-repeat="iofalse in ioFalses" ng-Repeat-Finished>
-				            <div class="box-body">
-				              <div class="alert" style="margin-bottom:10px;background:#0a78f217;height:75px">
-				               <h6 class="box-title" style="color:#f2f2f3;margin-top:1px;font-size:14px">
-				               	{{iofalse.machineName}}
-				               </h6>
-			              		<h6 style="color:#f2f2f3;margin-top:-8px;margin-bottom:1px;">
-				               		快速进给:{{iofalse.overrideRapid}}%
-				              	</h6>
-				              	 <hr class="spk-hr"/>
-			              		<h6 style="color:#f2f2f3;margin-top:5px;margin-bottom:1px;">
-				               		主轴倍率:{{iofalse.overrideSpindle}}%
-				              	</h6>
-				              	<hr class="spk-hr"/>
-				              </div>
-				            </div>
-				          </div>
+						<div style="width:100%;height:90%;margin-top:10px;overflow:hidden;padding:0">
+							<div data-ranking='true' style="width:100%;height:100%;" ranking-Running>
+								
+							</div>
 						</div>
-					</div> -->
-					<div class="nav-tabs-custom" style="background-color:#081639a1;height:529px;margin-top:14px;overflow: hidden;">
+					</div>
+					<div class="nav-tabs-custom" style="background-color:#081639a1;height:25rem;margin-top:20px;overflow: hidden;">
 						<span class="label label-default">设备生产计划与执行数据</span>
 						<div style="width:100%;height:100%;margin-top:0;overflow:hidden;">
 						<table class="table table-bordered" style="margin-top:10px">
@@ -202,7 +181,7 @@
 							</tr>
 						</thead>
 						<tbody roll-Up>
-							<tr role="row" class="roll-up odd" ng-repeat="report in reports" ng-Repeat-Finished>
+							<tr role="row" class="odd" ng-repeat="report in reports" ng-Repeat-Finished>
 							  <td>{{report.machineName}}</td>
 							  <td>{{report.plannedOtime}}</td>
 							  <td>{{report.actualOtime}}</td>
@@ -218,7 +197,28 @@
 					</table>
 						</div>
 					</div>
-			
+					<div class="nav-tabs-custom" style="background-color:#081639a1;height:17.625rem;margin-top:20px;">
+						<span class="label label-default">设备实时数据</span>
+						<div style="width:100%;height:100%;margin-top:15px;overflow:hidden;">
+				          <div class="box box-default col-md-3" ng-repeat="item in items">
+				            <div class="box-body">
+				              <div class="alert" style="margin-bottom:10px;background:#0a78f27a;height:75px">
+				               <h6 class="box-title" style="color:#f2f2f3;margin-top:1px;font-size:14px">
+				               	{{item.machineName}}
+				               </h6>
+			              		<h6 style="color:#f2f2f3;margin-top:-8px;margin-bottom:1px;">
+				               		快速进给:{{item.overrideRapid}}%
+				              	</h6>
+				              	 <hr class="spk-hr"/>
+			              		<h6 style="color:#f2f2f3;margin-top:5px;margin-bottom:1px;">
+				               		主轴倍率:{{item.overrideRapid}}%
+				              	</h6>
+				              	<hr class="spk-hr"/>
+				              </div>
+				            </div>
+				          </div>
+						</div>
+					</div>
 				</section>
 			</div>
 			<footer class="main-footer mainfooter">
