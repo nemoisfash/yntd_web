@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
  
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,12 +25,8 @@ import org.tdds.entity.Activities;
 import org.tdds.entity.Recipients;
 import org.tdds.service.RecipientsService;
 
-import cn.hxz.webapp.syscore.entity.User;
-import cn.hxz.webapp.syscore.support.AuthorizingUtils;
 import cn.hxz.webapp.syscore.support.BasePortalController;
 import cn.hxz.webapp.util.MobileOperatorUtils;
-import cn.hxz.webapp.util.ShiroUtils;
-import net.chenke.playweb.util.HashUtils;
  
 
 @Controller
@@ -72,13 +66,12 @@ public class Subsidies5GController extends BasePortalController{
 	@RequestMapping(value = "/sendSMS", method = RequestMethod.GET)
 	public Object sendSms(HttpServletRequest request,HttpServletResponse response,@RequestParam("tel") String tel) {
  		Map<String, Object> map = new HashMap<String, Object>();
- 		
-		
-		if(StringUtils.isBlank(tel) || StringUtils.isEmpty(tel)) {
+ 		if(StringUtils.isBlank(tel) || StringUtils.isEmpty(tel)) {
 			map.put("message", "手机号码不能为空");
 			map.put("result",false);
 			return map;
 		}
+ 		
 		if(!MobileOperatorUtils.isChineTelecom(tel)) {
 			map.put("message", "此活动只有电信用户才能参加");
 			map.put("result",false);

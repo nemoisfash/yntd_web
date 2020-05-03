@@ -17,10 +17,9 @@ app.controller('myCtrl', function($scope,$http) {
 	$scope.submit=function(){
 		 var currentSubsidiesTel = localStorage.getItem("currentSubsidiesTel");
 		 var activitiesId = localStorage.getItem("activitiesId");
-		 if(typeof(currentSubsidiesTel)=="undefined"){
+		 if(currentSubsidiesTel==null){
 			 console.info("undefined");
 			 window.location.href="/index";
-			 return;
 		 }
 		 
 		$.ajax({
@@ -30,6 +29,7 @@ app.controller('myCtrl', function($scope,$http) {
 		  dataType: "JSON",
 		  success: function(data){
 			if(data.result){
+				  localStorage.clear();
 				  window.location.href="/activities/success.html";
 			  }
 			},

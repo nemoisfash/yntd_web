@@ -20,21 +20,21 @@
 		<div class="form">
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_18.jpg" /> 
-				<input type="text" placeholder="请输入领取人手机号码" name="tel" id="subsidies_tel" value="" onchange="getSubsidies(this.value)" />
+				<input type="tel" placeholder="请输入领取人手机号码" name="tel" id="subsidies_tel" value="" onchange="getSubsidies(this)" />
 			</div>
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_182.jpg" /> 
 				<input type="text" placeholder="请输入验证码" name="" id="subsidies_code" value="" onchange="verifyCode('subsidies')"/>
-				<div data-flag='true' onclick="sedMessage('subsidies_tel',this);">获取验证码</div>
+				<div data-flag='true' onclick="sedMessage('subsidies_tel',this);" cursor:pointer;>获取验证码</div>
 			</div>
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_181.jpg" />
-				<input type="text" placeholder="请输入推荐人手机号码" name="tel" id="rem_tel" value="" />
+				<input type="tel" placeholder="请输入推荐人手机号码" name="tel" id="rem_tel" value="" onchange="getSubsidies(this)" />
 			</div>
 			<div class="label">
 				<img src="/themes/website/images/subsidies5G/icon_182.jpg" /> 
 				<input type="text" placeholder="请输入验证码" name="" id="rem_code" value="" onchange="verifyCode('rem')"/>
-				<div data-flag='true' onclick="sedMessage('rem_tel',this);">获取验证码</div>
+				<div data-flag='true' onclick="sedMessage('rem_tel',this);" cursor:pointer;>获取验证码</div>
 			</div>
 			<div class="code">
 				<div></div>
@@ -42,9 +42,9 @@
 					请阅读并同意 <a href="#">《隐私协议》</a> <a href="#">《用户协议》</a>
 				</p>
 			</div>
-			<div class="submits" onclick="submit()">
+			<a class="submits" onclick="submit()" cursor:pointer;>
 				<img src="/themes/website/images/subsidies5G/icon_18.jpg" />
-			</div>
+			</a>
 		</div>
 	</div>
 </body>
@@ -67,21 +67,6 @@
 			layer.msg("请填写手机号码!");
 			return;
 		}
- 
-		var length = tel.length;
-        var phone = /(^(\d{3,4}-)?\d{6,8}$)|(^(\d{3,4}-)?\d{6,8}(-\d{1,5})?$)|(\d{11})/;
-        if(!phone.test(tel) && length!=11){
-        	$("#" + key).val("");
-        	layer.msg("请填写正确的手机号码！");
-        	return;
-        };
-		
-		var code =$.cookie(tel);
-		if(typeof(code)!="undefined"){
-			layer.msg("联系人手机号码和推荐人手机号码不能相同!");
-			return;
-		}
-		 
 		$.ajax({
 			  type: 'GET',
 			  url:"/activities/sendSMS?tel=" + tel,
@@ -114,11 +99,19 @@
 		}, 1000)
  	}
 	
-	function getSubsidies(val){
+	function getSubsidies(_this){
+		var val=$(_this).val();
 		if(val==""){
 			return
 		}
-        
+		
+		if(!(/^1[3|4|5|7|8]\d{9}$/.test(val))){
+			$(_this).val("");
+			$(_this).focus();
+			layer.msg("手机号码有误，请重填");  
+	        return; 
+	    } 
+		
 		$.ajax({
 			  type: 'GET',
 			  url: "/activities/getSubsidies?tel="+val,
@@ -146,6 +139,7 @@
 			layer.msg("请获取"+currentUser+"验证码");
 			return false;
 		}
+		
 		if(currentCode==""||typeof(currentCode)=="undefined"){
 			layer.msg(currentUser+"验证码失效请重新获取!");
 			$("#"+key+"_code").val("");
@@ -179,7 +173,6 @@
 		
 		var subsidiesCookie =$.cookie(subsidiesTel);
 		var remCookie =$.cookie(remTel);
-		
 		if(typeof(subsidiesCookie)=="undefined"){
 			layer.msg("领取人验证码已经过期不能提交！请重新获取");
 			return
