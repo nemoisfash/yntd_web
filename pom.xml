@@ -21,7 +21,7 @@
 		<commons-codec-ver>1.10</commons-codec-ver>
 		<commons-lang3-ver>3.3.2</commons-lang3-ver>
 		<commons-fileupload-ver>1.3.2</commons-fileupload-ver>
-		<hibernate-validator-ver>4.3.2.Final</hibernate-validator-ver>
+		<hibernate-validator-ver>5.3.5.Final</hibernate-validator-ver>
 		<shiro-ver>1.3.2</shiro-ver>
 		<mysql-connector-ver>5.1.39</mysql-connector-ver>
 		<druid-datasource-ver>1.0.25</druid-datasource-ver>
