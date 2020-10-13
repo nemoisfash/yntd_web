@@ -11,7 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<junit-ver>4.8.2</junit-ver>
+		<junit-ver>4.13.1</junit-ver>
 		<slf4j-ver>1.7.21</slf4j-ver>
 		<spring-ver>4.2.9.RELEASE</spring-ver>
 		<ehcache-ver>2.10.3</ehcache-ver>
