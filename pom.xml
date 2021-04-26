@@ -17,7 +17,7 @@
 		<ehcache-ver>2.10.3</ehcache-ver>
 		<jackson2-ver>2.6.7</jackson2-ver>
 		<freemarker-ver>2.3.23</freemarker-ver>
-		<commons-io-ver>2.2</commons-io-ver>
+		<commons-io-ver>2.7</commons-io-ver>
 		<commons-codec-ver>1.10</commons-codec-ver>
 		<commons-lang3-ver>3.3.2</commons-lang3-ver>
 		<commons-fileupload-ver>1.3.2</commons-fileupload-ver>
