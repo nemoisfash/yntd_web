@@ -16,7 +16,7 @@
 		<mybatis-dynamapper-ver>3.4.5</mybatis-dynamapper-ver>
 		<mybatis-pagehelper-ver>5.1.2</mybatis-pagehelper-ver>
 		<javamail-ver>1.4.7</javamail-ver>
-		<httpclient-ver>4.3.6</httpclient-ver>
+		<httpclient-ver>4.5.13</httpclient-ver>
 		<apache-poi-ver>3.15</apache-poi-ver>
 		<zxing-ver>3.3.0</zxing-ver>
 		<jsoup-ver>1.10.3</jsoup-ver>
