@@ -19,7 +19,7 @@
 		<httpclient-ver>4.3.6</httpclient-ver>
 		<apache-poi-ver>3.15</apache-poi-ver>
 		<zxing-ver>3.3.0</zxing-ver>
-		<jsoup-ver>1.10.3</jsoup-ver>
+		<jsoup-ver>1.14.2</jsoup-ver>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
