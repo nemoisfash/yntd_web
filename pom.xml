@@ -13,7 +13,7 @@
 	<properties>
 		<junit-ver>4.8.2</junit-ver>
 		<slf4j-ver>1.7.21</slf4j-ver>
-		<spring-ver>4.2.9.RELEASE</spring-ver>
+		<spring-ver>5.2.20.RELEASE</spring-ver>
 		<ehcache-ver>2.10.3</ehcache-ver>
 		<jackson2-ver>2.6.7</jackson2-ver>
 		<freemarker-ver>2.3.23</freemarker-ver>
